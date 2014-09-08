@@ -19,15 +19,14 @@
   <Import Project="$(NuProjPath)\NuProj.props" Condition="Exists('$(NuProjPath)\NuProj.props')" />
   <PropertyGroup Label="Configuration">
     <Id>MS.Azure.ApiManagement</Id>
-    <Version>0.0.1-alpha</Version>
+    <Version>0.0.1-alpha1</Version>
     <Title>Azure API Managment Client Library</Title>
     <Authors>Will Perry</Authors>
     <Owners>Microsoft</Owners>
     <Summary>Client Library for Accessing Azure API Management</Summary>
     <Description>Client Library for Accessing Azure API Management</Description>
     <ReleaseNotes>Extremely early preview, not yet of much use</ReleaseNotes>
-    <ProjectUrl>
-    </ProjectUrl>
+    <ProjectUrl>https://github.com/willpe/apimgmt</ProjectUrl>
     <LicenseUrl>
     </LicenseUrl>
     <Copyright>Copyright (c) Will Perry, Microsoft</Copyright>

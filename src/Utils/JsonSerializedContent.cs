@@ -1,9 +1,10 @@
-﻿// ------------------------------------------------------------------------------------------------
-// <copyright file="JsonSerializedContent.cs" company="Microsoft">
-//   Copyright (c) Microsoft Corporation. All rights reserved.
-// </copyright>
-// ------------------------------------------------------------------------------------------------
-namespace Microsoft.Azure.ApiManagement
+﻿// --------------------------------------------------------------------------
+//  <copyright file="JsonSerializedContent.cs" company="Microsoft">
+//      Copyright (c) Microsoft Corporation. All rights reserved.
+//  </copyright>
+// --------------------------------------------------------------------------
+
+namespace MS.Azure.ApiManagement.Utils
 {
     using System.IO;
     using System.Net;

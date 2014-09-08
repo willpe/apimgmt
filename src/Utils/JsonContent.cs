@@ -1,9 +1,10 @@
-﻿// ------------------------------------------------------------------------------------------------
-// <copyright file="JsonContent.cs" company="Microsoft">
-//   Copyright (c) Microsoft Corporation. All rights reserved.
-// </copyright>
-// ------------------------------------------------------------------------------------------------
-namespace Microsoft.Azure.ApiManagement
+﻿// --------------------------------------------------------------------------
+//  <copyright file="JsonContent.cs" company="Microsoft">
+//      Copyright (c) Microsoft Corporation. All rights reserved.
+//  </copyright>
+// --------------------------------------------------------------------------
+
+namespace MS.Azure.ApiManagement.Utils
 {
     using System.IO;
     using System.Net;
@@ -57,7 +58,10 @@ namespace Microsoft.Azure.ApiManagement
             {
                 using (var textWriter = new StreamWriter(stream))
                 {
-                    using (var jsonWriter = new JsonTextWriter(textWriter) { Formatting = this.Formatting })
+                    using (var jsonWriter = new JsonTextWriter(textWriter)
+                    {
+                        Formatting = this.Formatting
+                    })
                     {
                         this.body.WriteTo(jsonWriter);
                         jsonWriter.Flush();

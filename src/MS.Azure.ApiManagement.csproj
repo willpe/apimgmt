@@ -56,13 +56,12 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ApiManagementHttpClient.cs" />
-    <Compile Include="ConnectionString.cs" />
+    <Compile Include="Utils\ConnectionString.cs" />
     <Compile Include="ApiManagementEndpoint.cs" />
     <Compile Include="Group.cs" />
-    <Compile Include="HttpContentExtensions.cs" />
-    <Compile Include="JsonContent.cs" />
-    <Compile Include="JsonSerializedContent.cs" />
-    <Compile Include="Program.cs" />
+    <Compile Include="Utils\HttpContentExtensions.cs" />
+    <Compile Include="Utils\JsonContent.cs" />
+    <Compile Include="Utils\JsonSerializedContent.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

@@ -4,7 +4,7 @@
 //  </copyright>
 // --------------------------------------------------------------------------
 
-namespace Microsoft.Azure.ApiManagement
+namespace MS.Azure.ApiManagement
 {
     using System;
     using System.Collections.Concurrent;
@@ -14,6 +14,8 @@ namespace Microsoft.Azure.ApiManagement
     using System.Security.Cryptography;
     using System.Text;
 
+    using MS.Azure.ApiManagement.Utils;
+
     public class ApiManagementEndpoint
     {
         private const string EdgeVersion = "2014-02-14-preview";
@@ -22,12 +24,12 @@ namespace Microsoft.Azure.ApiManagement
         private static readonly ApiManagementEndpoint _default;
 
         private static readonly ConcurrentDictionary<string, ApiManagementEndpoint> endpointCache;
+        private readonly string accessToken;
 
         private readonly Uri baseAddress;
         private readonly string identifier;
         private readonly string key;
         private readonly string version;
-        private readonly string accessToken;
 
         static ApiManagementEndpoint()
         {
@@ -49,6 +51,11 @@ namespace Microsoft.Azure.ApiManagement
             get { return _default; }
         }
 
+        public string AccessToken
+        {
+            get { return this.accessToken; }
+        }
+
         public Uri BaseAddress
         {
             get { return this.baseAddress; }
@@ -62,11 +69,6 @@ namespace Microsoft.Azure.ApiManagement
         public string Version
         {
             get { return this.version; }
-        }
-
-        public string AccessToken
-        {
-            get { return this.accessToken; }
         }
 
         public static ApiManagementEndpoint FromConnectionString(string nameOrConnectionString)
@@ -99,7 +101,7 @@ namespace Microsoft.Azure.ApiManagement
 
         public string CreateAccessToken(DateTime expiry)
         {
-            if (!string.IsNullOrEmpty(accessToken))
+            if (!string.IsNullOrEmpty(this.accessToken))
             {
                 return this.accessToken;
             }

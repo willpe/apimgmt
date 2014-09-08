@@ -4,7 +4,7 @@
 //  </copyright>
 // --------------------------------------------------------------------------
 
-namespace Microsoft.Azure.ApiManagement
+namespace MS.Azure.ApiManagement
 {
     using System;
     using System.Net.Http;
