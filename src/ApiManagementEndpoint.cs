@@ -16,7 +16,7 @@ namespace MS.Azure.ApiManagement
 
     using MS.Azure.ApiManagement.Utils;
 
-    public class ApiManagementEndpoint
+    public class ApiManagementEndpoint : IApiManagementEndpoint
     {
         private const string EdgeVersion = "2014-02-14-preview";
 
@@ -46,7 +46,7 @@ namespace MS.Azure.ApiManagement
             this.accessToken = accessToken;
         }
 
-        public static ApiManagementEndpoint Default
+        public static IApiManagementEndpoint Default
         {
             get { return _default; }
         }

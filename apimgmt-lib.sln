@@ -19,6 +19,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		README = README
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MS.Azure.ApiManagement.Tests", "test\MS.Azure.ApiManagement.Tests.csproj", "{76175A5A-FD58-47C8-8961-F013A7377F02}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -33,6 +35,10 @@ Global
 		{9849102D-2E93-46FB-A9AD-C858D72F0AEF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9849102D-2E93-46FB-A9AD-C858D72F0AEF}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9849102D-2E93-46FB-A9AD-C858D72F0AEF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{76175A5A-FD58-47C8-8961-F013A7377F02}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{76175A5A-FD58-47C8-8961-F013A7377F02}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{76175A5A-FD58-47C8-8961-F013A7377F02}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{76175A5A-FD58-47C8-8961-F013A7377F02}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

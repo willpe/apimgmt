@@ -6,6 +6,7 @@
 
 namespace MS.Azure.ApiManagement
 {
+    using System.ComponentModel;
     using System.ComponentModel.DataAnnotations;
 
     using Newtonsoft.Json;
@@ -21,13 +22,13 @@ namespace MS.Azure.ApiManagement
         /// <summary>
         /// Resource identifier. Uniquely identifies the group within the current API Management service instance. 
         /// </summary>
-        [JsonProperty("id")]
+        [JsonProperty("id"), ReadOnly(true)]
         public string Id { get; private set; }
 
         /// <summary>
         /// true if the group is one of the three built in groups (Administrators, Developers, or Guests); otherwise false. This property is read-only.
         /// </summary>
-        [JsonProperty("builtIn")]
+        [JsonProperty("builtIn"), ReadOnly(true)]
         public bool IsBuiltIn { get; private set; }
 
         /// <summary>

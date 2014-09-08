@@ -7,16 +7,20 @@
 namespace MS.Azure.ApiManagement
 {
     using System;
+    using System.Collections.Generic;
+    using System.Net;
     using System.Net.Http;
     using System.Net.Http.Headers;
     using System.Threading;
     using System.Threading.Tasks;
 
-    public class ApiManagementHttpClient : HttpClient
-    {
-        private readonly ApiManagementEndpoint endpoint;
+    using MS.Azure.ApiManagement.Utils;
 
-        public ApiManagementHttpClient(ApiManagementEndpoint endpoint)
+    public class ApiManagementHttpClient : HttpClient, IApiManagementHttpClient
+    {
+        private readonly IApiManagementEndpoint endpoint;
+
+        public ApiManagementHttpClient(IApiManagementEndpoint endpoint)
             : base(new ApiManagementHttpClient.Handler(endpoint))
         {
             if (endpoint == null)
@@ -39,9 +43,83 @@ namespace MS.Azure.ApiManagement
         {
         }
 
-        public ApiManagementEndpoint Endpoint
+        public IApiManagementEndpoint Endpoint
         {
             get { return this.endpoint; }
+        }
+
+        public async Task<User> GetUserAsync(string id)
+        {
+            id = User.NormalizeId(id);
+
+            var uri = this.endpoint.MapPath("/users/{0}", id);
+            using (var response = await this.GetAsync(uri))
+            {
+                if (response.StatusCode == HttpStatusCode.NotFound)
+                {
+                    return null;
+                }
+
+                response.EnsureSuccessStatusCode();
+
+                var result = await response.Content.DeserializeJsonAsync<User>();
+                result.EntityVersion = response.Headers.ETag.ToString();
+                return result;
+            }
+        }
+
+        public async Task<String> GetUserMetadataAsync(string id)
+        {
+            id = User.NormalizeId(id);
+
+            var uri = this.endpoint.MapPath("/users/{0}", id);
+            using (var response = await this.GetAsync(uri))
+            {
+                if (response.StatusCode == HttpStatusCode.NotFound)
+                {
+                    return null;
+                }
+
+                return response.Headers.ETag.ToString();
+            }
+        }
+
+        public async Task<bool> CreateUserAsync(string id, User properties)
+        { 
+            id = User.NormalizeId(id);
+
+            if (id.Length > 256)
+            {
+                throw new ArgumentOutOfRangeException("id", "The maximum length of 'id' is 256 characters");
+            }
+            
+            properties.BeforeCreate(id);
+
+            var uri = this.endpoint.MapPath("/users/{0}", id);
+            var content = new JsonSerializedContent(properties);
+            using (var response = await this.PutAsync(uri, content))
+            {
+                if (response.StatusCode == HttpStatusCode.NotFound)
+                {
+                    return false;
+                }
+
+                response.EnsureSuccessStatusCode();
+
+                var result = await response.Content.DeserializeJsonAsync<User>();
+                result.EntityVersion = response.Headers.ETag.ToString();
+                return true;
+            }
+        }
+
+        public async Task<IReadOnlyCollection<User>> GetUsersAsync()
+        {
+            var uri = this.endpoint.MapPath("/users");
+            using (var response = await this.GetAsync(uri))
+            {
+                response.EnsureSuccessStatusCode();
+                return await response.Content.DeserializeJsonAsync<JsonCollection<User>>();
+            }
         }
 
         public Task<HttpResponseMessage> ImportAsync(string name, StreamContent body)
@@ -53,12 +131,12 @@ namespace MS.Azure.ApiManagement
 
         private class Handler : MessageProcessingHandler
         {
-            private readonly ApiManagementEndpoint endpoint;
+            private readonly IApiManagementEndpoint endpoint;
 
             private string accessToken;
             private DateTime accessTokenExpires = DateTime.MinValue;
 
-            public Handler(ApiManagementEndpoint endpoint)
+            public Handler(IApiManagementEndpoint endpoint)
                 : base(new HttpClientHandler())
             {
                 this.endpoint = endpoint;

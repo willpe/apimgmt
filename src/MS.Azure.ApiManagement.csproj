@@ -55,7 +55,15 @@
     <Reference Include="System.Net.Http.WebRequest" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Api.cs" />
     <Compile Include="ApiManagementHttpClient.cs" />
+    <Compile Include="IApiManagementEndpoint.cs" />
+    <Compile Include="IApiManagementHttpClient.cs" />
+    <Compile Include="IVersionedEntity.cs" />
+    <Compile Include="JsonCollection.cs" />
+    <Compile Include="Operation.cs" />
+    <Compile Include="Product.cs" />
+    <Compile Include="User.cs" />
     <Compile Include="Utils\ConnectionString.cs" />
     <Compile Include="ApiManagementEndpoint.cs" />
     <Compile Include="Group.cs" />
