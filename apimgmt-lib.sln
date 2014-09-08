@@ -1,0 +1,40 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2013
+VisualStudioVersion = 12.0.30723.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MS.Azure.ApiManagement", "src\MS.Azure.ApiManagement.csproj", "{A3A56763-7C42-4578-9930-F62F964FF67D}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{D943BC12-E66A-47D4-9A3E-FB8D64AE3BE7}"
+	ProjectSection(SolutionItems) = preProject
+		.nuget\NuGet.Config = .nuget\NuGet.Config
+		.nuget\NuGet.exe = .nuget\NuGet.exe
+		.nuget\NuGet.targets = .nuget\NuGet.targets
+	EndProjectSection
+EndProject
+Project("{FF286327-C783-4F7A-AB73-9BCBAD0D4460}") = "apimgmt", "nuget\apimgmt.nuproj", "{9849102D-2E93-46FB-A9AD-C858D72F0AEF}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{458DE683-F983-4955-9850-FEC284587A6C}"
+	ProjectSection(SolutionItems) = preProject
+		README = README
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{A3A56763-7C42-4578-9930-F62F964FF67D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A3A56763-7C42-4578-9930-F62F964FF67D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A3A56763-7C42-4578-9930-F62F964FF67D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A3A56763-7C42-4578-9930-F62F964FF67D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9849102D-2E93-46FB-A9AD-C858D72F0AEF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9849102D-2E93-46FB-A9AD-C858D72F0AEF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9849102D-2E93-46FB-A9AD-C858D72F0AEF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9849102D-2E93-46FB-A9AD-C858D72F0AEF}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

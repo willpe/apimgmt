@@ -1,0 +1,43 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|AnyCPU">
+      <Configuration>Debug</Configuration>
+      <Platform>AnyCPU</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|AnyCPU">
+      <Configuration>Release</Configuration>
+      <Platform>AnyCPU</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>9849102d-2e93-46fb-a9ad-c858d72f0aef</ProjectGuid>
+  </PropertyGroup>
+  <PropertyGroup>
+    <NuProjPath Condition=" '$(NuProjPath)' == '' ">$(MSBuildExtensionsPath)\NuProj\</NuProjPath>
+  </PropertyGroup>
+  <Import Project="$(NuProjPath)\NuProj.props" Condition="Exists('$(NuProjPath)\NuProj.props')" />
+  <PropertyGroup Label="Configuration">
+    <Id>MS.Azure.ApiManagement</Id>
+    <Version>0.0.1-alpha</Version>
+    <Title>Azure API Managment Client Library</Title>
+    <Authors>Will Perry</Authors>
+    <Owners>Microsoft</Owners>
+    <Summary>Client Library for Accessing Azure API Management</Summary>
+    <Description>Client Library for Accessing Azure API Management</Description>
+    <ReleaseNotes>Extremely early preview, not yet of much use</ReleaseNotes>
+    <ProjectUrl>
+    </ProjectUrl>
+    <LicenseUrl>
+    </LicenseUrl>
+    <Copyright>Copyright (c) Will Perry, Microsoft</Copyright>
+    <Tags>apimgmt apimanagement azure apim</Tags>
+  </PropertyGroup>
+  <ItemGroup>
+    <Content Include="Readme.md" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\src\MS.Azure.ApiManagement.csproj" />
+  </ItemGroup>
+  <Import Project="$(NuProjPath)\NuProj.targets" />
+</Project>
