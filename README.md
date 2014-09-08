@@ -46,3 +46,21 @@ Development
 You'll need:
   - Visual Studio 2013
   - NuGet Package Project http://visualstudiogallery.msdn.microsoft.com/fbe9b9b8-34ae-47b5-a751-cb71a16f7e96
+
+
+To run the unit tests, you'll need to create a file, `/test/config.user.cs` with content like the following:
+
+````
+namespace MS.Azure.ApiManagement.Tests
+{
+    public partial class Config
+    {
+        internal string GetConnectionString()
+        {
+            return "serviceName=XXXX;identifier=XXXX;key=XXXX";
+        }
+    }
+}
+````
+
+Take care not to commit this file.
