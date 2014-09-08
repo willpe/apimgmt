@@ -19,7 +19,7 @@
   <Import Project="$(NuProjPath)\NuProj.props" Condition="Exists('$(NuProjPath)\NuProj.props')" />
   <PropertyGroup Label="Configuration">
     <Id>MS.Azure.ApiManagement</Id>
-    <Version>0.0.1-alpha1</Version>
+    <Version>0.0.1-alpha2</Version>
     <Title>Azure API Managment Client Library</Title>
     <Authors>Will Perry</Authors>
     <Owners>Microsoft</Owners>

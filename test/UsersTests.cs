@@ -68,8 +68,7 @@ namespace MS.Azure.ApiManagement.Tests
                 Password = "P@ssw0rd1"
 
             };
-
-
+            
             var created = await client.CreateUserAsync("test1", newUser);
             Assert.IsTrue(created);
 
