@@ -60,7 +60,7 @@ namespace MS.Azure.ApiManagement.Tests
         public async Task CreateUser()
         {
             var client = CreateClient();
-            var newUser = new User
+            var newUser = new User("test1")
             {
                 FirstName = "Testy",
                 LastName = "McTesterson",
@@ -69,7 +69,7 @@ namespace MS.Azure.ApiManagement.Tests
 
             };
             
-            var created = await client.CreateUserAsync("test1", newUser);
+            var created = await client.CreateUserAsync(newUser);
             Assert.IsTrue(created);
 
             var version = await client.GetUserMetadataAsync("test1");
@@ -77,6 +77,43 @@ namespace MS.Azure.ApiManagement.Tests
 
             var nonUser = await client.GetUserAsync("test1");
             Assert.IsNotNull(nonUser);
+        }
+
+        [TestMethod]
+        public async Task UpdateUser()
+        {
+            var client = CreateClient();
+            var user = new User("test3")
+            {
+                FirstName = "Testy",
+                LastName = "McTesterson",
+                Email = "no-reply2@noreply.org",
+                Password = "P@ssw0rd1"
+
+            };
+
+            var created = await client.CreateUserAsync(user);
+            Assert.IsTrue(created);
+
+            user.FirstName = "Testita";
+            user.LastName = " de Testilio";
+            user.Note = "Test";
+
+            var success = await client.UpdateUserAsync(user);
+            Assert.IsTrue(success);
+        }
+
+        [TestMethod]
+        public async Task DeleteUser()
+        {
+            var client = CreateClient();
+            var etag = await client.GetUserMetadataAsync("test1");
+            var success = await client.DeleteUserAsync("test1", etag);
+            Assert.IsTrue(success);
+
+            etag = await client.GetUserMetadataAsync("test2");
+            success = await client.DeleteUserAsync("test2", etag);
+            Assert.IsTrue(success);
         }
     }
 }

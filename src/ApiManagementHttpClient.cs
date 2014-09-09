@@ -11,48 +11,84 @@ namespace MS.Azure.ApiManagement
     using System.Net;
     using System.Net.Http;
     using System.Net.Http.Headers;
-    using System.Threading;
     using System.Threading.Tasks;
 
     using MS.Azure.ApiManagement.Utils;
 
-    public class ApiManagementHttpClient : HttpClient, IApiManagementHttpClient
+    public class ApiManagementHttpClient : ApiManagementHttpClientBase
     {
-        private readonly IApiManagementEndpoint endpoint;
-
         public ApiManagementHttpClient(IApiManagementEndpoint endpoint)
-            : base(new ApiManagementHttpClient.Handler(endpoint))
+            : base(endpoint)
         {
-            if (endpoint == null)
-            {
-                throw new ArgumentNullException("endpoint");
-            }
-
-            this.endpoint = endpoint;
-
-            this.BaseAddress = this.endpoint.BaseAddress;
         }
 
         public ApiManagementHttpClient(string connectionString)
-            : this(ApiManagementEndpoint.FromConnectionString(connectionString))
+            : base(connectionString)
         {
         }
 
         public ApiManagementHttpClient()
-            : this(ApiManagementEndpoint.Default)
+            : base()
         {
         }
 
-        public IApiManagementEndpoint Endpoint
+        #region Users
+
+        public override async Task<bool> CreateUserAsync(User user)
         {
-            get { return this.endpoint; }
+            var id = User.NormalizeId(user.Id);
+
+            var uri = this.Endpoint.MapPath("/users/{0}", id);
+            var content = new JsonSerializedContent(user);
+            using (var response = await this.PutAsync(uri, content))
+            {
+                if (response.StatusCode == HttpStatusCode.NotFound)
+                {
+                    return false;
+                }
+
+                if (!response.IsSuccessStatusCode)
+                {
+                    throw await ApiManagementHttpRequestException.Create(response);
+                }
+
+                var result = await response.Content.DeserializeJsonAsync<User>();
+                result.EntityVersion = response.Headers.ETag.ToString();
+                return true;
+            }
         }
 
-        public async Task<User> GetUserAsync(string id)
+        public override async Task<bool> DeleteUserAsync(string id, string entityVersion)
         {
             id = User.NormalizeId(id);
 
-            var uri = this.endpoint.MapPath("/users/{0}", id);
+            var uri = this.Endpoint.MapPath("/users/{0}", id);
+            using (var message = new HttpRequestMessage(HttpMethod.Delete, uri))
+            {
+                message.Headers.IfMatch.ParseAdd(entityVersion);
+
+                using (var response = await this.SendAsync(message))
+                {
+                    if (response.StatusCode == HttpStatusCode.NoContent)
+                    {
+                        return true;
+                    }
+
+                    if (!response.IsSuccessStatusCode)
+                    {
+                        throw await ApiManagementHttpRequestException.Create(response);
+                    }
+
+                    return false;
+                }
+            }
+        }
+
+        public override async Task<User> GetUserAsync(string id)
+        {
+            id = User.NormalizeId(id);
+
+            var uri = this.Endpoint.MapPath("/users/{0}", id);
             using (var response = await this.GetAsync(uri))
             {
                 if (response.StatusCode == HttpStatusCode.NotFound)
@@ -68,12 +104,12 @@ namespace MS.Azure.ApiManagement
             }
         }
 
-        public async Task<String> GetUserMetadataAsync(string id)
+        public override async Task<String> GetUserMetadataAsync(string id)
         {
             id = User.NormalizeId(id);
 
-            var uri = this.endpoint.MapPath("/users/{0}", id);
-            using (var response = await this.GetAsync(uri))
+            var uri = this.Endpoint.MapPath("/users/{0}", id);
+            using (var response = await this.HeadAsync(uri))
             {
                 if (response.StatusCode == HttpStatusCode.NotFound)
                 {
@@ -84,37 +120,9 @@ namespace MS.Azure.ApiManagement
             }
         }
 
-        public async Task<bool> CreateUserAsync(string id, User properties)
-        { 
-            id = User.NormalizeId(id);
-
-            if (id.Length > 256)
-            {
-                throw new ArgumentOutOfRangeException("id", "The maximum length of 'id' is 256 characters");
-            }
-            
-            properties.BeforeCreate(id);
-
-            var uri = this.endpoint.MapPath("/users/{0}", id);
-            var content = new JsonSerializedContent(properties);
-            using (var response = await this.PutAsync(uri, content))
-            {
-                if (response.StatusCode == HttpStatusCode.NotFound)
-                {
-                    return false;
-                }
-
-                response.EnsureSuccessStatusCode();
-
-                var result = await response.Content.DeserializeJsonAsync<User>();
-                result.EntityVersion = response.Headers.ETag.ToString();
-                return true;
-            }
-        }
-
-        public async Task<IReadOnlyCollection<User>> GetUsersAsync()
+        public override async Task<IReadOnlyCollection<User>> GetUsersAsync()
         {
-            var uri = this.endpoint.MapPath("/users");
+            var uri = this.Endpoint.MapPath("/users");
             using (var response = await this.GetAsync(uri))
             {
                 response.EnsureSuccessStatusCode();
@@ -122,56 +130,35 @@ namespace MS.Azure.ApiManagement
             }
         }
 
-        public Task<HttpResponseMessage> ImportAsync(string name, StreamContent body)
+        public override async Task<bool> UpdateUserAsync(User user)
+        {
+            var id = User.NormalizeId(user.Id);
+
+            var uri = this.Endpoint.MapPath("/users/{0}", id);
+            var content = new JsonSerializedContent(user) { Headers = { { "If-Match", user.EntityVersion } } };
+            using (var response = await this.PatchAsync(uri, content))
+            {
+                if (response.StatusCode == HttpStatusCode.NotFound)
+                {
+                    return false;
+                }
+
+                if (!response.IsSuccessStatusCode)
+                {
+                    throw await ApiManagementHttpRequestException.Create(response);
+                }
+
+                return true;
+            }
+        } 
+
+        #endregion
+
+        public override Task<HttpResponseMessage> ImportAsync(string name, StreamContent body)
         {
             var apiId = Uri.EscapeDataString(name.ToLowerInvariant());
-            var uri = this.endpoint.MapPath("/apis/{0}?import=true&path=/{0}", apiId);
+            var uri = this.Endpoint.MapPath("/apis/{0}?import=true&path=/{0}", apiId);
             return this.PutAsync(uri, body);
-        }
-
-        private class Handler : MessageProcessingHandler
-        {
-            private readonly IApiManagementEndpoint endpoint;
-
-            private string accessToken;
-            private DateTime accessTokenExpires = DateTime.MinValue;
-
-            public Handler(IApiManagementEndpoint endpoint)
-                : base(new HttpClientHandler())
-            {
-                this.endpoint = endpoint;
-            }
-
-            protected override HttpRequestMessage ProcessRequest(HttpRequestMessage request, CancellationToken cancellationToken)
-            {
-                if (this.accessTokenExpires.Subtract(DateTime.UtcNow).TotalMinutes < 1)
-                {
-                    this.accessTokenExpires = DateTime.UtcNow.AddHours(4);
-                    this.accessToken = this.endpoint.CreateAccessToken(this.accessTokenExpires);
-                }
-
-                if (this.accessToken != null)
-                {
-                    request.Headers.Authorization = new AuthenticationHeaderValue("SharedAccessSignature", this.accessToken);
-                }
-
-                if (request.RequestUri.Query.Length == 0 || !request.RequestUri.Query.Contains("api-version="))
-                {
-                    var builder = new UriBuilder(request.RequestUri)
-                    {
-                        Query = (request.RequestUri.Query + "&api-version=" + this.endpoint.Version).Trim('?', '&')
-                    };
-
-                    request.RequestUri = builder.Uri;
-                }
-
-                return request;
-            }
-
-            protected override HttpResponseMessage ProcessResponse(HttpResponseMessage response, CancellationToken cancellationToken)
-            {
-                return response;
-            }
         }
     }
 }

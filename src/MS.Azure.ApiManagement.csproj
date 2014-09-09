@@ -32,6 +32,7 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <DocumentationFile>bin\Release\apimgmt.xml</DocumentationFile>
   </PropertyGroup>
   <PropertyGroup>
     <StartupObject />
@@ -50,6 +51,11 @@
   <ItemGroup>
     <Compile Include="Api.cs" />
     <Compile Include="ApiManagementHttpClient.cs" />
+    <Compile Include="ApiManagementHttpClientBase.cs" />
+    <Compile Include="ApiManagementHttpRequestException.cs" />
+    <Compile Include="Error.cs" />
+    <Compile Include="ErrorBody.cs" />
+    <Compile Include="ErrorDetail.cs" />
     <Compile Include="IApiManagementEndpoint.cs" />
     <Compile Include="IApiManagementHttpClient.cs" />
     <Compile Include="IVersionedEntity.cs" />
